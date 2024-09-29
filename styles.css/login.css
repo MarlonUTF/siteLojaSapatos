@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Protest+Guerrilla&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Protest+Guerrilla&family=Sofadi+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+:root{
+    --corMain: #32A287;
+    --fonteTituloMain: "Bungee", sans-serif;
+    --tamanhoTituloMain: 60px;
+    --corTituloMain: #1a3838;
+    --fonteBotao:  "Bebas Neue", sans-serif;
+    --corTextoBotao: black;
+    --corFundoBotao: white;
+    --tamanhoTextoBotao: 30px;
+    --bordaBotao: 1.5px solid white;
+
+    --corContainer: white;
+
+    --corFooter: #0F110C;
+    --corTituloFooter: rgb(148, 148, 250);
+    --fonteTituloFooter: "Ubuntu", sans-serif;
+    --corSubtituloFooter: blue;
+    --fonteSubtituloFooter: "Ubuntu", sans-serif;
+    --fonteTextoFooter: "Ubuntu", sans-serif;
+    --corHrFooter: white;
+    --corTextoFooter: white;
+
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+main{
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--corMain);
+}
+
+.container{
+    width: 50vw;
+    height: 70vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    
+    background-color: var(--corContainer);
+
+    border-radius: 20px;
+
+    padding: 20px;
+}
+
+.h1Login{
+    font-family: var(--fonteTituloMain);
+    color: var(--corTituloMain);
+}
+
+h2{
+    font-family: var(--fonteBotao);
+    color: var(--corTextoBotao);
+}
+
+form{
+    height: 30vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+label{
+    font-family: var(--fonteSubtituloFooter);
+    color: var(--corSubtituloFooter);
+}
+
+.input{
+    display: flex;
+    flex-direction: column;
+}
+
+.input_user{
+    all: unset;
+    width: 40vw;
+    height: 40px;
+
+    border-radius: 15px;
+    border: 1px solid gray;
+
+    text-align: center;
+    font-size: 20px;
+    font-family: var(--fonteTituloMain);
+}
+
+input::placeholder {
+    color: lightgray;
+    opacity: 1;
+}
+
+.submit{
+    all: unset;
+    width: 40vw;
+    height: 40px;
+
+    border-radius: 15px;
+
+    background-color: rgb(148, 148, 250);
+
+    text-align: center;
+    font-size: 20px;
+    font-family: var(--fonteTituloMain);
+
+    transition: 0.5s;
+}
+
+.submit:hover{
+    background-color: rgb(10, 78, 100);
+}
+
+label{
+    font-size: 20px;
+}

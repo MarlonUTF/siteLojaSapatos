@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Protest+Guerrilla&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Protest+Guerrilla&family=Sofadi+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+:root{
+    --corHeader: #44CF6C;
+    --corLogo: green;
+    --tamanhoLogo: 40px;
+    --fonteLogo:"Protest Guerrilla", sans-serif;
+    --fonteDescricaoLogo: "Sofadi One", system-ui;;
+    --corDescricaoLogo: black;
+    --tamanhoDescricaoLogo: 20px;
+
+    --corMain: #32A287;
+    --fonteTituloMain: "Bungee", sans-serif;
+    --tamanhoTituloMain: 60px;
+    --corTituloMain: #1a3838;
+    --fonteBotao:  "Bebas Neue", sans-serif;
+    --corTextoBotao: black;
+    --corFundoBotao: white;
+    --tamanhoTextoBotao: 30px;
+    --bordaBotao: 1.5px solid white;
+
+    --corFooter: #0F110C;
+    --corTituloFooter: rgb(148, 148, 250);
+    --fonteTituloFooter: "Ubuntu", sans-serif;
+    --corSubtituloFooter: rgb(148, 148, 250);
+    --fonteSubtituloFooter: "Ubuntu", sans-serif;
+    --fonteTextoFooter: "Ubuntu", sans-serif;
+    --corHrFooter: white;
+    --corTextoFooter: white;
+
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a{
+    text-decoration: none;
+}
+
+header{
+    height: 10vh;
+    width: 100%;
+
+    display: flex;
+
+    background-color: var(--corHeader);
+}
+
+header .logo{
+    margin: 10px 40px;
+}
+
+header .logo .textoLogo{
+    font-family: var(--fonteLogo);
+    color: var(--corLogo);
+    font-size: var(--tamanhoLogo);
+    margin: 0;
+}
+
+header .logo .descricaoLogo{
+    font-family: var(--fonteDescricaoLogo);
+    color: var(--corDescricaoLogo);
+    font-size: var(--tamanhoDescricaoLogo);
+    margin: 0;
+    text-align: center;
+}
+
+main{
+    height: 90vh;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--corMain);
+}
+
+main h1{
+    font-family: var(--fonteTituloMain);
+    font-size: var(--tamanhoTituloMain);
+    color: var(--corTituloMain);
+
+    margin: 120px;
+}
+
+main .botoesIndex{
+    display: flex;
+}
+
+main .botoesIndex .botao{
+    display: inline-block;
+    text-align: center;
+    
+    margin: 0 20px;
+    padding: 10px 15px;
+    border-radius: 20px;
+
+    color: var(--corTextoBotao);
+    background-color: var(--corFundoBotao);
+    font-family: var(--fonteBotao);
+    font-size: var(--tamanhoTextoBotao);
+    border: var(--bordaBotao);
+
+    transition: 0.5s;
+}
+
+main .botoesIndex .botao:hover{
+    color: var(--corFundoBotao);
+    background-color: var(--corTextoBotao);
+}
+
+footer{
+    background-color: var(--corFooter);
+}
+
+footer h3{
+    width: 100%;
+    padding: 20px;
+
+    text-align: center;
+    color: var(--corTituloFooter);
+    font-family: var(--fonteTituloFooter);
+}
+
+footer hr{
+    border: none;
+    height: 3px;
+    background-color: var(--corHrFooter);
+    margin: 0 auto;
+    width: 98%;
+    border-radius: 10px;
+}
+
+footer .divsFooter{
+    padding: 20px;
+    width: 100%;
+    
+    display: flex;
+    justify-content: space-evenly;
+}
+
+footer .divsFooter .divFooter h4{
+    color: var(--corSubtituloFooter);
+    font-family: var(--fonteSubtituloFooter);
+}
+
+footer .divsFooter .divFooter p{
+    color: var(--corTextoFooter);
+    font-family: var(--fonteTextoFooter);
+}
