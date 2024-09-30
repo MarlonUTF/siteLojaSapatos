@@ -6,6 +6,8 @@ if (!isset($_SESSION['cpf']) || !isset($_SESSION['senha'])) {
     header('Location: login.php');
     exit();
 }
+
+$cpfPessoa = $_SESSION['cpf'];
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -17,32 +19,23 @@ if (!isset($_SESSION['cpf']) || !isset($_SESSION['senha'])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" integrity="sha512-MpDFIChbcXl2QgipQrt1VcPHMldRILetapBl5MPCA9Y8r7qvlwx1/Mc9hNTzY+kS5kX6PdoDq41ws1HiVNLdZA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="gerarRelatorio.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        table {
-            width: 2000px; 
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px;
-            border: 1px solid #ddd; 
-            text-align: left; 
-        }
-        h2 {
-            page-break-after: avoid;
-        }
-        .reservas {
-            overflow: hidden;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css/consultarVendas.css">
 </head>
 <body>
-    <nav>
-        <div class="logo">Ralver Sapatos</div>
-        <a href="gerente.php">Voltar</a>
-        <a href="sair.php">Sair</a>
-    </nav>
+    <header>
+        <div class="logo">
+            <p class="textoLogo">Ralver</p>
+            <p class="descricaoLogo">Gerentes</p>
+        </div>
+        <div class="botoes">
+            <a href="gerente.php" class="botaoVoltar">Voltar</a>
+            <a href="sair.php" class="botaoSair">Sair</a>
+        </div>
+    </header>
+
     <main>
-        <div>
+        <div class="pesquisar">
+            <h1>Consultar Período de vendas</h1>
             <form action="" method="GET">
                 <p>Data inicial: <input class="data" type="date" name="dat1" required></p>
                 <p>Data final: <input class="data" type="date" name="dat2" required></p>
@@ -87,20 +80,20 @@ if (!isset($_SESSION['cpf']) || !isset($_SESSION['senha'])) {
                 $stmt->execute();
                 $result = $stmt->get_result();
                 if ($result->num_rows > 0) {
-                    echo "<h2>Vendas no intervalo de $data1 a $data2:</h2>";
-                    echo "<div class='reservas'>";
+                    echo "<div class='infoRelatorio1'>";
+                    echo "<h2 class='tituloTabela'>Vendas no intervalo de $data1 a $data2:</h2>";
                     echo "<table class='table'>";
                     echo "<thead>";
                     echo "<tr>";
                     echo "<th scope='coluna'>#</th>";
                     echo "<th scope='coluna'>Data</th>";
                     echo "<th scope='coluna'>Produto</th>";
-                    echo "<th scope='coluna'>Quantidade</th>";
+                    echo "<th scope='coluna'>Quantidade (Un.)</th>";
                     echo "<th scope='coluna'>Vendedor</th>";
                     echo "<th scope='coluna'>Cliente</th>";
-                    echo "<th scope='coluna'>Preco unitário</th>";
-                    echo "<th scope='coluna'>Subtotal</th>";
-                    echo "<th scope='coluna'>Comissão do Funcionário</th>";
+                    echo "<th scope='coluna'>Preco unitário (R$)</th>";
+                    echo "<th scope='coluna'>Subtotal (R$)</th>";
+                    echo "<th scope='coluna'>Comissão do Funcionário (R$)</th>";
                     echo "</tr>";
                     echo "</thead>";
                     echo "<tbody>";
@@ -120,6 +113,7 @@ if (!isset($_SESSION['cpf']) || !isset($_SESSION['senha'])) {
                     echo "</tbody>";
                     echo "</table>";
                     echo "</div>";
+
                     
                     $sql_total = "SELECT 
                                     v.dataVenda, 
@@ -189,6 +183,9 @@ if (!isset($_SESSION['cpf']) || !isset($_SESSION['senha'])) {
                             'rgba(255, 159, 64, 0.6)',
                         ];
 
+                        echo "<div class='ladoDireito'>";
+                        echo "<div class='infoRelatorio2'>";
+                        echo "<h2 class='tituloTabela'>Gráfico de vendas: </h2>";
                         echo "<canvas id='graficoVendas'></canvas>";
                         echo "<script>";
                         echo "const ctx = document.getElementById('graficoVendas').getContext('2d');";
@@ -222,14 +219,87 @@ if (!isset($_SESSION['cpf']) || !isset($_SESSION['senha'])) {
                         echo "};";
                         echo "const graficoVendas = new Chart(ctx, config);";
                         echo "</script>";
+                        echo "</div>";
                     }
                 } else {
                     echo "<h2>Nenhuma venda encontrada no intervalo selecionado.</h2>";
                 }
 
-                echo "<a href='gerar_pdf.php?data1=".$data1."&data2=".$data2."'>Gerar Relatório</a>";
-            }
+
+
+                $sqlPagamento = "
+                    SELECT 
+                        p1.nomePessoa AS Vendedor,
+                        s.valorSalario AS Salario, 
+                        SUM(ROUND((vhp.quantidadeProduto * p.precoUnitarioProduto * (CAST(f.comissaoFuncionario AS DECIMAL) / 100)), 2)) AS TotalComissoes,
+                        (s.valorSalario + SUM(ROUND((vhp.quantidadeProduto * p.precoUnitarioProduto * (CAST(f.comissaoFuncionario AS DECIMAL) / 100)), 2))) AS TotalReceber
+                    FROM 
+                        venda v
+                    JOIN 
+                        venda_has_produto vhp ON v.idVenda = vhp.venda_idVenda
+                    JOIN 
+                        funcionario f ON f.pessoa_cpf = v.funcionario_pessoa_cpf
+                    JOIN 
+                        pessoa p1 ON p1.cpf = f.pessoa_cpf
+                    JOIN 
+                        produto p ON p.idProduto = vhp.produto_idProduto
+                    JOIN 
+                        cargo c ON c.idCargo = f.cargoIdCargo
+                    JOIN 
+                        salario s ON s.idSalario = c.salario_idSalario
+                    WHERE 
+                        v.dataVenda BETWEEN '$data1' AND '$data2'
+                    GROUP BY 
+                        p1.nomePessoa, s.valorSalario;";
+
+                $stmtPagamento = $conexao->prepare($sqlPagamento);
+                $stmtPagamento->execute();
+                $resultPagamento = $stmtPagamento->get_result();
+
+                if ($resultPagamento->num_rows > 0) {
+                    echo "<div class='infoRelatorio3'>";
+                    echo "<h2 class='tituloTabela'>Pagamento referente ao período: </h2>";
+                    echo "<table>";
+                    echo "<thead>";
+                    echo "<tr>";
+                    echo "<th>Vendedor</th>";
+                    echo "<th>Salário (R$)</th>";
+                    echo "<th>Total em Comissões (R$)</th>";
+                    echo "<th>Total a Receber (R$)</th>";
+                    echo "</tr>";
+                    echo "</thead>";
+                    echo "<tbody>";
+                    
+                    while ($row = $resultPagamento->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($row['Vendedor']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['Salario']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['TotalComissoes']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['TotalReceber']) . "</td>";
+                        echo "</tr>";
+                    }
+                    
+                    echo "</tbody>";
+                    echo "</table>";
+                    echo "</div>";
+
+                    $cpfPessoa = $_SESSION['cpf'];
     
+                    $sqlNomePessoa = "SELECT p.nomePessoa FROM pessoa p WHERE p.cpf = '$cpfPessoa'";
+                    $resultado = $conexao->query($sqlNomePessoa);
+                    
+                    $row = $resultado->fetch_assoc();
+                    $usuario = $row['nomePessoa'];
+                    
+                    echo "<div class='alinharBotao'>";
+                    echo "<a class='gerarRelaorio' href='gerar_pdf.php?data1=".$data1."&data2=".$data2."&usuario=".$usuario."' target= '_blank'>Gerar Relatório</a>";
+                    echo "</div>";
+                    echo "</div>";
+                }
+
+                
+            }
+
             ?>
         </div>
     </main>
